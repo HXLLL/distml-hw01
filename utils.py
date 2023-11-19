@@ -20,7 +20,10 @@ def get_network(args):
     """ return given network
     """
 
-    if args.net == 'vgg16':
+    if args.net == 'vit':
+        from models.vit import vit
+        net = vit()
+    elif args.net == 'vgg16':
         from models.vgg import vgg16_bn
         net = vgg16_bn()
     elif args.net == 'vgg13':
@@ -157,10 +160,12 @@ def get_network(args):
         print('the network name you have entered is not supported yet')
         sys.exit()
 
-    if args.gpu: #use_gpu
-        if torch.cuda.device_count() > 1:
-            net = torch.nn.DataParallel(net)
+    if args.gpu:
         net = net.cuda()
+        if torch.cuda.device_count() > 1:
+            local_rank = int(os.environ["LOCAL_RANK"])
+            print("Using {} GPUs".format(torch.cuda.device_count()))
+            net = torch.nn.parallel.DistributedDataParallel(net, device_ids=[local_rank], output_device=local_rank)
 
     return net
 
