@@ -14,8 +14,8 @@ run: |
   -u
   train.py
   --net
-  googlenet
+  vit
   --gpu
 
 profile: |
-  python -u train.py --net googlenet --gpu --profiling
+  python -u train.py --net vit --gpu --profiling

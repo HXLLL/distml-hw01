@@ -295,7 +295,10 @@ if __name__ == '__main__':
 
         wecloud_train(epoch)
         if not os.path.exists(checkpoint_dir.format(epoch=epoch)):
-            os.mkdir(checkpoint_dir.format(epoch=epoch))
+            try:
+                os.mkdir(checkpoint_dir.format(epoch=epoch))
+            except:
+                pass
         
         if args.profiling:
             break
